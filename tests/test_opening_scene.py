@@ -13,6 +13,9 @@ from src import opening_scene
 from src import utilities # To mock the utility function
 from src.constants import OpeningScreenMessages # To check the argument
 
+# In tests/test_main_menu.py, update the imports to:
+from src.main_menu import display_main_menu  # Import the specific function
+
 # --- Test Functions ---
 
 def test_opening_scene_start_calls_utility(monkeypatch: MonkeyPatch) -> None:
