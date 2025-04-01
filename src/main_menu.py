@@ -3,12 +3,15 @@
 Handles the display and interaction for the game's main menu.
 """
 import logging
+from typing import Optional, Union
+
 import src.utilities as utilities
 import src.main_game as main_game
 from src.constants import MainMenuStrings, EXIT_MESSAGE
 from src.enums import GameState as GameStateEnum
 
-logger = logging.getLogger(__name__)
+# Configure logger for this module
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class MainMenu:
@@ -19,7 +22,7 @@ class MainMenu:
 
     def __init__(self) -> None:
         """Initialize the main menu with default state."""
-        self.current_state = GameStateEnum.MAIN_MENU
+        self.current_state: GameStateEnum = GameStateEnum.MAIN_MENU
         logger.debug("MainMenu initialized in state %s", self.current_state)
 
     def display_title_screen(self) -> None:
@@ -48,9 +51,9 @@ class MainMenu:
             str: The validated lowercase user selection.
         """
         while True:
-            selection = input(MainMenuStrings.INPUT_REQUEST)
+            selection: str = input(MainMenuStrings.INPUT_REQUEST)
             logger.debug("User input received: '%s'", selection)
-            selection_lower = selection.lower()
+            selection_lower: str = selection.lower()
 
             if selection_lower not in MainMenuStrings.PROPER_INPUT_RESPONSES:
                 logger.warning("Invalid menu selection: '%s'", selection)
@@ -64,7 +67,7 @@ class MainMenu:
                 logger.info("Valid menu selection: '%s'", selection_lower)
                 return selection_lower  # Return the valid input
 
-    def handle_menu_selection(self, selection) -> bool:
+    def handle_menu_selection(self, selection: str) -> bool:
         """
         Handle a validated menu selection.
 
@@ -78,21 +81,21 @@ class MainMenu:
             logger.info("User selected Quit.")
             utilities.clear_screen()
             print(EXIT_MESSAGE)
-            self.current_state = GameStateEnum.QUITTING  # Fixed: GameState -> GameStateEnum
+            self.current_state = GameStateEnum.QUITTING
             return False  # Exit the menu loop
 
         elif selection == 'n':
             logger.info("User selected New Game.")
             utilities.clear_screen()
             print("\nStarting New Game...")
-            self.current_state = GameStateEnum.NEW_GAME  # Fixed: GameState -> GameStateEnum
+            self.current_state = GameStateEnum.NEW_GAME
             # Start new game and get final state
-            final_state = main_game.start_new_game()
+            final_state: GameStateEnum = main_game.start_new_game()
             # Record the state for potential future use
             self.current_state = final_state
             input("Press Enter to return to menu...")
             logger.debug("Returned to main menu after New Game.")
-            self.current_state = GameStateEnum.MAIN_MENU  # Fixed: GameState -> GameStateEnum
+            self.current_state = GameStateEnum.MAIN_MENU
             return True  # Continue the menu loop
 
         elif selection == 'l':
@@ -119,19 +122,22 @@ def display_main_menu() -> GameStateEnum:
     """
     Display and handle the main menu until user quits.
     Entry point for the main menu system.
+
+    Returns:
+        GameStateEnum: The final state of the game after exiting the main menu.
     """
-    menu = MainMenu()
+    menu: MainMenu = MainMenu()
     menu.display_title_screen()
 
     # Main menu loop
-    continue_menu = True
+    continue_menu: bool = True
     while continue_menu:
         logger.debug("Clearing screen for main menu display.")
         utilities.clear_screen()
         menu.display_menu_options()
         logger.info("Main menu displayed.")
 
-        selection = menu.get_valid_menu_input()
+        selection: str = menu.get_valid_menu_input()
         continue_menu = menu.handle_menu_selection(selection)
 
     logger.info("Exited main menu with state %s", menu.current_state)
