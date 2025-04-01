@@ -15,10 +15,7 @@ from src import main_game
 from src import opening_scene
 from src import utilities
 from src.constants import BriefingMessages
-
-# In tests/test_main_menu.py, update the imports to:
-from src.main_menu import display_main_menu  # Import the specific function
-
+from src.enums import GameState as GameStateEnum  # Added import for GameStateEnum
 # --- Test Functions ---
 
 def test_start_new_game_flow(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:

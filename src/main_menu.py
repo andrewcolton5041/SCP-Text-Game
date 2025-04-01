@@ -6,82 +6,94 @@ import logging
 import src.utilities as utilities
 import src.main_game as main_game
 from src.constants import MainMenuStrings, EXIT_MESSAGE
+from src.enums import GameState as GameStateEnum
 
 logger = logging.getLogger(__name__)
 
-# --- Helper Functions ---
 
-def _print_menu_options():
-    """Prints the main menu options to the console."""
-    print(MainMenuStrings.MAIN_MENU_TITLE)
-    print(MainMenuStrings.NEW_GAME)
-    print(MainMenuStrings.LOAD_GAME)
-    print(MainMenuStrings.OPTIONS)
-    print(MainMenuStrings.QUIT)
-    print()  # Add a blank line for spacing
-
-def _get_valid_menu_input() -> str:
+class MainMenu:
     """
-    Prompts the user for input and validates it against allowed menu options.
-
-    Loops until valid input ('n', 'l', 'o', 'q') is received.
-
-    Returns:
-        str: The validated lowercase user selection.
+    Manages the main menu display and interaction.
+    Uses enum-based state management for menu navigation.
     """
-    while True:
-        selection = input(MainMenuStrings.INPUT_REQUEST)
-        logger.debug(f"User input received: '{selection}'")
-        selection_lower = selection.lower()
 
-        if selection_lower not in MainMenuStrings.PROPER_INPUT_RESPONSES:
-            logger.warning(f"Invalid menu selection: '{selection}'")
-            print(MainMenuStrings.INVALID_SELECTION)
-            input("Press Enter to try again...")
-            # Re-draw the menu after invalid input message
-            logger.debug("Re-drawing main menu after invalid input.")
-            utilities.clear_screen()
-            _print_menu_options() # Call helper to reprint
-        else:
-            logger.info(f"Valid menu selection: '{selection_lower}'")
-            return selection_lower # Return the valid input
+    def __init__(self):
+        """Initialize the main menu with default state."""
+        self.current_state = GameStateEnum.MAIN_MENU
+        logger.debug("MainMenu initialized in state %s", self.current_state)
 
-# --- Main Menu Function (Refactored) ---
-
-def display_main_menu() -> None:
-    """
-    Displays the game title, waits, then shows and handles the main menu.
-    """
-    logger.debug("Clearing screen for title display.")
-    utilities.clear_screen()
-    print(MainMenuStrings.TITLE)
-    print(MainMenuStrings.ENTER_TO_CONTINUE)
-    input()
-    logger.info("Title screen acknowledged by user.")
-
-    # Main menu loop
-    while True:
-        logger.debug("Clearing screen for main menu display.")
+    def display_title_screen(self):
+        """Display the game title and wait for acknowledgement."""
+        logger.debug("Clearing screen for title display.")
         utilities.clear_screen()
-        _print_menu_options() # Use helper to print
-        logger.info("Main menu displayed.")
+        print(MainMenuStrings.TITLE)
+        print(MainMenuStrings.ENTER_TO_CONTINUE)
+        input()  # Wait for any key
+        logger.info("Title screen acknowledged by user.")
 
-        selection = _get_valid_menu_input() # Use helper to get valid input
+    def display_menu_options(self):
+        """Display the main menu options."""
+        print(MainMenuStrings.MAIN_MENU_TITLE)
+        print(MainMenuStrings.NEW_GAME)
+        print(MainMenuStrings.LOAD_GAME)
+        print(MainMenuStrings.OPTIONS)
+        print(MainMenuStrings.QUIT)
+        print()  # Add a blank line for spacing
 
-        # Handle the valid selection
+    def get_valid_menu_input(self):
+        """
+        Prompt for and validate user menu selection.
+
+        Returns:
+            str: The validated lowercase user selection.
+        """
+        while True:
+            selection = input(MainMenuStrings.INPUT_REQUEST)
+            logger.debug("User input received: '%s'", selection)
+            selection_lower = selection.lower()
+
+            if selection_lower not in MainMenuStrings.PROPER_INPUT_RESPONSES:
+                logger.warning("Invalid menu selection: '%s'", selection)
+                print(MainMenuStrings.INVALID_SELECTION)
+                input("Press Enter to try again...")
+                # Re-draw the menu after invalid input message
+                logger.debug("Re-drawing main menu after invalid input.")
+                utilities.clear_screen()
+                self.display_menu_options()
+            else:
+                logger.info("Valid menu selection: '%s'", selection_lower)
+                return selection_lower  # Return the valid input
+
+    def handle_menu_selection(self, selection):
+        """
+        Handle a validated menu selection.
+
+        Args:
+            selection (str): The user's menu selection.
+
+        Returns:
+            bool: True if menu should continue, False if should exit.
+        """
         if selection == 'q':
             logger.info("User selected Quit.")
             utilities.clear_screen()
             print(EXIT_MESSAGE)
-            break # Exit the main menu loop
+            self.current_state = GameStateEnum.QUITTING  # Fixed: GameState -> GameStateEnum
+            return False  # Exit the menu loop
 
         elif selection == 'n':
             logger.info("User selected New Game.")
             utilities.clear_screen()
             print("\nStarting New Game...")
-            main_game.start_new_game()
+            self.current_state = GameStateEnum.NEW_GAME  # Fixed: GameState -> GameStateEnum
+            # Start new game and get final state
+            final_state = main_game.start_new_game()
+            # Record the state for potential future use
+            self.current_state = final_state
             input("Press Enter to return to menu...")
-            logger.debug("Returned to main menu after New Game attempt.")
+            logger.debug("Returned to main menu after New Game.")
+            self.current_state = GameStateEnum.MAIN_MENU  # Fixed: GameState -> GameStateEnum
+            return True  # Continue the menu loop
 
         elif selection == 'l':
             logger.info("User selected Load Game.")
@@ -89,6 +101,7 @@ def display_main_menu() -> None:
             print("\nLoading Game... (Not implemented yet)")
             input("Press Enter to return to menu...")
             logger.debug("Returned to main menu after Load Game attempt.")
+            return True  # Continue the menu loop
 
         elif selection == 'o':
             logger.info("User selected Options.")
@@ -96,6 +109,30 @@ def display_main_menu() -> None:
             print("\nOpening Options... (Not implemented yet)")
             input("Press Enter to return to menu...")
             logger.debug("Returned to main menu after Options attempt.")
+            return True  # Continue the menu loop
 
-# --- (Keep the __main__ block if needed for direct testing) ---
-# Note: The __main__ block might need adjustments if it relied on the old structure.
+        # Should never reach here due to input validation
+        return True
+
+
+def display_main_menu():
+    """
+    Display and handle the main menu until user quits.
+    Entry point for the main menu system.
+    """
+    menu = MainMenu()
+    menu.display_title_screen()
+
+    # Main menu loop
+    continue_menu = True
+    while continue_menu:
+        logger.debug("Clearing screen for main menu display.")
+        utilities.clear_screen()
+        menu.display_menu_options()
+        logger.info("Main menu displayed.")
+
+        selection = menu.get_valid_menu_input()
+        continue_menu = menu.handle_menu_selection(selection)
+
+    logger.info("Exited main menu with state %s", menu.current_state)
+    return menu.current_state

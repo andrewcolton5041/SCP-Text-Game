@@ -1,12 +1,21 @@
-# src/models.py
+# src/models.py (partial update to fix the name collision)
 """
 Data models for Project Chimera using dataclasses.
-
-This module defines the core data structures used throughout the game,
-including characters, items, inventory, and game state tracking.
 """
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any, Set
+from typing import Dict, List, Optional, Any, Set, Union
+from enum import Enum
+
+from .enums import (
+    CharacterState, 
+    MentalState, 
+    LocationState, 
+    MissionState,
+    AnomalyState, 
+    TrustLevel, 
+    GameState as GameStateEnum,  # Renamed import to avoid collision
+    InteractionState
+)
 
 
 @dataclass
@@ -72,6 +81,7 @@ class Item:
     ammo_capacity: Optional[int] = None
     ammo_type: Optional[str] = None
     content_summary: Optional[str] = None
+    anomalous_state: Optional[AnomalyState] = None
 
 
 @dataclass
@@ -202,6 +212,11 @@ class Character:
     status_flags: Dict[str, Any] = field(default_factory=dict)
     special_abilities: Dict[str, SpecialAbility] = field(default_factory=dict)
     
+    # State management (using enums)
+    physical_state: CharacterState = CharacterState.NORMAL
+    mental_state: MentalState = MentalState.STABLE
+    trust_level: TrustLevel = TrustLevel.NEUTRAL
+    
     # For special entities like Vance
     whisperer_state_mods: Optional[Dict[str, Any]] = None
 
@@ -216,7 +231,55 @@ class Location:
     npcs: List[str] = field(default_factory=list)  # NPC IDs present in the location
     visited: bool = False
     locked_exits: Dict[str, bool] = field(default_factory=dict)  # Direction -> locked status
+    state: LocationState = LocationState.SECURE
+    anomaly_present: bool = False
+    anomaly_state: Optional[AnomalyState] = None
 
+
+@dataclass
+class Mission:
+    """Represents a mission or objective in the game."""
+    id: str
+    name: str
+    description: str
+    state: MissionState = MissionState.LOCKED
+    prerequisites: List[str] = field(default_factory=list)  # List of mission IDs
+    complete_conditions: Dict[str, Any] = field(default_factory=dict)
+    rewards: Dict[str, Any] = field(default_factory=dict)
+    related_npcs: List[str] = field(default_factory=list)
+    related_locations: List[str] = field(default_factory=list)
+
+
+@dataclass
+class DialogueNode:
+    """Represents a single node in a dialogue tree."""
+    id: str
+    text: str
+    responses: Dict[str, str] = field(default_factory=dict)  # response_id -> next_node_id
+    requirements: Dict[str, Any] = field(default_factory=dict)  # For conditional responses
+    effects: Dict[str, Any] = field(default_factory=dict)  # State changes from this dialogue
+
+
+# src/models.py (partial update to fix the name collision)
+"""
+Data models for Project Chimera using dataclasses.
+"""
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any, Set, Union
+from enum import Enum
+
+from .enums import (
+    CharacterState, 
+    MentalState, 
+    LocationState, 
+    MissionState,
+    AnomalyState, 
+    TrustLevel, 
+    GameState as GameStateEnum,  # Renamed import to avoid collision
+    InteractionState
+)
+
+# ... [earlier code remains unchanged] ...
 
 @dataclass
 class GameState:
@@ -230,3 +293,9 @@ class GameState:
     discovered_clues: Set[str] = field(default_factory=set)
     completed_objectives: Set[str] = field(default_factory=set)
     game_time: int = 0  # In-game time tracking (e.g., turns, minutes)
+    missions: Dict[str, Mission] = field(default_factory=dict)
+    
+    # State tracking with enums - using renamed import
+    current_game_state: GameStateEnum = GameStateEnum.INITIALIZING
+    current_interaction_state: InteractionState = InteractionState.EXPLORATION
+    active_dialogue: Optional[str] = None  # ID of active dialogue node if any
