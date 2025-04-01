@@ -3,7 +3,8 @@
 Contains the core logic for starting and running a new game session.
 """
 import logging
-from typing import Optional, Dict, Any
+import sys
+from typing import Optional, Dict, Any, Union, Callable, IO
 
 import src.utilities as utilities
 import src.opening_scene as opening_scene
@@ -102,51 +103,99 @@ class GameSession:
         # Any additional setup needed before gameplay starts
         self.set_interaction_state(InteractionState.EXPLORATION)
     
-    def main_game_loop(self) -> None:
-        """Run the main game loop based on current state."""
+    def main_game_loop(self, 
+                       input_func: Optional[Callable[..., str]] = None, 
+                       output_func: Optional[Callable[..., None]] = None) -> None:
+        """
+        Run the main game loop based on current state.
+        
+        Args:
+            input_func (Optional[Callable[..., str]], optional): Function for getting user input.
+            output_func (Optional[Callable[..., None]], optional): Function for displaying output.
+        """
         logger.info("Entering main game loop in state %s", self.current_state)
+        
+        # Use default input/output if not provided
+        if input_func is None:
+            input_func = input
+        if output_func is None:
+            output_func = print
         
         # Keep running until game ends
         while self.current_state not in (GameStateEnum.GAME_OVER, GameStateEnum.QUITTING):
             if self.current_state == GameStateEnum.PLAYING:
-                self._handle_playing_state()
+                self._handle_playing_state(input_func, output_func)
             elif self.current_state == GameStateEnum.DIALOGUE:
-                self._handle_dialogue_state()
+                self._handle_dialogue_state(output_func)
             elif self.current_state == GameStateEnum.COMBAT:
-                self._handle_combat_state()
+                self._handle_combat_state(output_func)
             elif self.current_state == GameStateEnum.PAUSED:
-                self._handle_paused_state()
+                self._handle_paused_state(input_func, output_func)
             else:
                 # Unhandled state, break to avoid infinite loop
                 logger.error("Unhandled game state: %s", self.current_state)
                 break
     
-    def _handle_playing_state(self) -> None:
-        """Handle the main PLAYING state logic."""
+    def _handle_playing_state(self, 
+                               input_func: Callable[..., str], 
+                               output_func: Callable[..., None]) -> None:
+        """
+        Handle the main PLAYING state logic.
+        
+        Args:
+            input_func (Callable[..., str]): Function for getting user input.
+            output_func (Callable[..., None]): Function for displaying output.
+        """
         # Placeholder for game command parsing
-        command: str = input("\nWhat would you like to do? ")
+        command: str = input_func("\nWhat would you like to do? ")
         logger.debug("Player input: %s", command)
         
         # Simple command parsing placeholder
         if command.lower() in ("quit", "exit"):
             self.transition_to(GameStateEnum.QUITTING)
         else:
-            print("Command not implemented yet.")
+            output_func("Command not implemented yet.")
     
-    def _handle_dialogue_state(self) -> None:
-        """Handle dialogue interaction state."""
-        print("Dialogue system not implemented yet.")
+    def _handle_dialogue_state(
+        self, 
+        output_func: Callable[..., None]
+    ) -> None:
+        """
+        Handle dialogue interaction state.
+        
+        Args:
+            output_func (Callable[..., None]): Function for displaying output.
+        """
+        output_func("Dialogue system not implemented yet.")
         self.transition_to(GameStateEnum.PLAYING)
     
-    def _handle_combat_state(self) -> None:
-        """Handle combat interaction state."""
-        print("Combat system not implemented yet.")
+    def _handle_combat_state(
+        self, 
+        output_func: Callable[..., None]
+    ) -> None:
+        """
+        Handle combat interaction state.
+        
+        Args:
+            output_func (Callable[..., None]): Function for displaying output.
+        """
+        output_func("Combat system not implemented yet.")
         self.transition_to(GameStateEnum.PLAYING)
     
-    def _handle_paused_state(self) -> None:
-        """Handle game paused state."""
-        print("\nGame is paused. Resume or quit?")
-        choice: str = input("[R]esume or [Q]uit: ").lower()
+    def _handle_paused_state(
+        self, 
+        input_func: Callable[..., str], 
+        output_func: Callable[..., None]
+    ) -> None:
+        """
+        Handle game paused state.
+        
+        Args:
+            input_func (Callable[..., str]): Function for getting user input.
+            output_func (Callable[..., None]): Function for displaying output.
+        """
+        output_func("\nGame is paused. Resume or quit?")
+        choice: str = input_func("[R]esume or [Q]uit: ").lower()
         
         if choice.startswith("r"):
             self.transition_to(GameStateEnum.PLAYING)

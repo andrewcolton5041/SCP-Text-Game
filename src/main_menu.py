@@ -3,7 +3,7 @@
 Handles the display and interaction for the game's main menu.
 """
 import logging
-from typing import Optional, Union
+from typing import Optional, Callable, Union
 
 import src.utilities as utilities
 import src.main_game as main_game
@@ -25,44 +25,87 @@ class MainMenu:
         self.current_state: GameStateEnum = GameStateEnum.MAIN_MENU
         logger.debug("MainMenu initialized in state %s", self.current_state)
 
-    def display_title_screen(self) -> None:
-        """Display the game title and wait for acknowledgement."""
+    def display_title_screen(
+        self, 
+        output_func: Optional[Callable[..., None]] = None
+    ) -> None:
+        """
+        Display the game title and wait for acknowledgement.
+        
+        Args:
+            output_func (Optional[Callable[..., None]], optional): 
+                Function for displaying output. Defaults to print.
+        """
         logger.debug("Clearing screen for title display.")
         utilities.clear_screen()
-        print(MainMenuStrings.TITLE)
-        print(MainMenuStrings.ENTER_TO_CONTINUE)
+        
+        # Use print if no output function provided
+        if output_func is None:
+            output_func = print
+        
+        output_func(MainMenuStrings.TITLE)
+        output_func(MainMenuStrings.ENTER_TO_CONTINUE)
         input()  # Wait for any key
         logger.info("Title screen acknowledged by user.")
 
-    def display_menu_options(self) -> None:
-        """Display the main menu options."""
-        print(MainMenuStrings.MAIN_MENU_TITLE)
-        print(MainMenuStrings.NEW_GAME)
-        print(MainMenuStrings.LOAD_GAME)
-        print(MainMenuStrings.OPTIONS)
-        print(MainMenuStrings.QUIT)
-        print()  # Add a blank line for spacing
+    def display_menu_options(
+        self, 
+        output_func: Optional[Callable[..., None]] = None
+    ) -> None:
+        """
+        Display the main menu options.
+        
+        Args:
+            output_func (Optional[Callable[..., None]], optional): 
+                Function for displaying output. Defaults to print.
+        """
+        # Use print if no output function provided
+        if output_func is None:
+            output_func = print
+        
+        output_func(MainMenuStrings.MAIN_MENU_TITLE)
+        output_func(MainMenuStrings.NEW_GAME)
+        output_func(MainMenuStrings.LOAD_GAME)
+        output_func(MainMenuStrings.OPTIONS)
+        output_func(MainMenuStrings.QUIT)
+        output_func()  # Add a blank line for spacing
 
-    def get_valid_menu_input(self) -> str:
+    def get_valid_menu_input(
+        self, 
+        input_func: Optional[Callable[..., str]] = None, 
+        output_func: Optional[Callable[..., None]] = None
+    ) -> str:
         """
         Prompt for and validate user menu selection.
+
+        Args:
+            input_func (Optional[Callable[..., str]], optional): 
+                Function for getting user input. Defaults to input().
+            output_func (Optional[Callable[..., None]], optional): 
+                Function for displaying output. Defaults to print.
 
         Returns:
             str: The validated lowercase user selection.
         """
+        # Use default input/output if not provided
+        if input_func is None:
+            input_func = input
+        if output_func is None:
+            output_func = print
+
         while True:
-            selection: str = input(MainMenuStrings.INPUT_REQUEST)
+            selection: str = input_func(MainMenuStrings.INPUT_REQUEST)
             logger.debug("User input received: '%s'", selection)
             selection_lower: str = selection.lower()
 
             if selection_lower not in MainMenuStrings.PROPER_INPUT_RESPONSES:
                 logger.warning("Invalid menu selection: '%s'", selection)
-                print(MainMenuStrings.INVALID_SELECTION)
-                input("Press Enter to try again...")
+                output_func(MainMenuStrings.INVALID_SELECTION)
+                input_func("Press Enter to try again...")
                 # Re-draw the menu after invalid input message
                 logger.debug("Re-drawing main menu after invalid input.")
                 utilities.clear_screen()
-                self.display_menu_options()
+                self.display_menu_options(output_func)
             else:
                 logger.info("Valid menu selection: '%s'", selection_lower)
                 return selection_lower  # Return the valid input

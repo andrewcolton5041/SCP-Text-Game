@@ -5,7 +5,7 @@ Sets up logging and starts the main menu.
 """
 import logging
 import sys
-from typing import Optional
+from typing import Optional, Callable, Union
 
 from src.main_menu import display_main_menu  # Import the specific function
 from src.enums import GameState
@@ -24,19 +24,30 @@ def configure_logging() -> None:
     )
 
 # --- Main Function ---
-def main() -> Optional[int]:
+def main(
+    menu_func: Optional[Callable[[], GameState]] = None, 
+    log_config_func: Optional[Callable[[], None]] = None
+) -> Union[int, None]:
     """
     Sets up the game environment and starts the main menu.
     
+    Args:
+        menu_func (Optional[Callable[[], GameState]], optional): 
+            Function to display main menu. Defaults to display_main_menu.
+        log_config_func (Optional[Callable[[], None]], optional): 
+            Function to configure logging. Defaults to configure_logging.
+    
     Returns:
-        Optional[int]: Exit code (None for successful exit, or error code)
+        Union[int, None]: Exit code (0 for successful exit, 1 for error, None if not specified)
     """
     try:
-        # Configure logging
-        configure_logging()
+        # Use provided or default logging configuration
+        if log_config_func is None:
+            log_config_func = configure_logging
+        log_config_func()
         
         # Get logger for this module
-        logger = logging.getLogger(__name__)
+        logger: logging.Logger = logging.getLogger(__name__)
         
         # Log game initialization
         logger.info("=================================================")
@@ -46,8 +57,12 @@ def main() -> Optional[int]:
         # Add any initial setup steps here
         logger.debug("Initial setup complete. Displaying main menu.")
         
+        # Use provided or default menu display function
+        if menu_func is None:
+            menu_func = display_main_menu
+        
         # Display main menu and get final game state
-        final_state: GameState = display_main_menu()
+        final_state: GameState = menu_func()
         
         # Log game exit
         logger.info("=================================================")
