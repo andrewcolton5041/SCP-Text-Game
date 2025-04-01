@@ -5,13 +5,17 @@ Sets up logging and starts the main menu.
 """
 import logging
 import sys
-from typing import Optional, Callable, Union, Type, TypeVar
+from typing import Optional, Callable, Protocol
 
 from src.main_menu import display_main_menu
 from src.enums import GameState
 
-# Type variable for return type of menu function
-T = TypeVar('T', bound=GameState)
+# Protocol for menu and logging configuration functions
+class MenuFunction(Protocol):
+    def __call__(self) -> GameState: ...
+
+class LogConfigFunction(Protocol):
+    def __call__(self) -> None: ...
 
 # --- Logging Configuration ---
 def configure_logging() -> None:
@@ -29,20 +33,18 @@ def configure_logging() -> None:
 
 # --- Main Function ---
 def main(
-    menu_func: Optional[Callable[[], GameState]] = None, 
-    log_config_func: Optional[Callable[[], None]] = None
+    menu_func: Optional[MenuFunction] = None, 
+    log_config_func: Optional[LogConfigFunction] = None
 ) -> int:
     """
     Sets up the game environment and starts the main menu.
     
     Args:
-        menu_func (Optional[Callable[[], GameState]], optional): 
-            Function to display main menu. Defaults to display_main_menu.
-        log_config_func (Optional[Callable[[], None]], optional): 
-            Function to configure logging. Defaults to configure_logging.
+        menu_func: Function to display main menu. Defaults to display_main_menu.
+        log_config_func: Function to configure logging. Defaults to configure_logging.
     
     Returns:
-        int: Exit code (0 for successful exit, 1 for error)
+        Exit code (0 for successful exit, 1 for error)
     """
     try:
         # Use provided or default logging configuration
