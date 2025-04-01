@@ -1,174 +1,174 @@
 {
-    "name": "Agent Rook",
-    "age": 34,
-    "nationality": "American",
-    "clearance_level": 4,
-    "characteristics": {
-        "strength": 60,
-        "constitution": 65,
-        "size": 60,
-        "intelligence": 75,
-        "power": 70,
-        "dexterity": 65,
-        "appearance": 50,
-        "education": 70
+  "name": "Agent Rook",
+  "age": 34,
+  "nationality": "American",
+  "clearance_level": 4,
+  "characteristics": {
+    "strength": 60,
+    "constitution": 65,
+    "size": 60,
+    "intelligence": 75,
+    "power": 70,
+    "dexterity": 65,
+    "appearance": 50,
+    "education": 70
+  },
+  "derived_stats": {
+    "hp": 13,
+    "max_hp": 13,
+    "ms": 70,
+    "max_ms": 70,
+    "mp": 14,
+    "max_mp": 14,
+    "db": 0,
+    "build": 0,
+    "move": 8
+  },
+  "skills": {
+    "investigative": {
+      "spot_hidden": 65,
+      "listen": 55,
+      "library_use": 70,
+      "psychology": 45,
+      "forensics": 40
     },
-    "derived_stats": {
-        "hp": 13,
-        "max_hp": 13,
-        "ms": 70,
-        "max_ms": 70,
-        "mp": 14,
-        "max_mp": 14,
-        "db": 0,
-        "build": 0,
-        "move": 8
+    "combat_survival": {
+      "handgun": 55,
+      "brawl": 45,
+      "dodge": 50,
+      "stealth": 45,
+      "first_aid": 55
     },
-    "skills": {
-        "investigative": {
-            "spot_hidden": 65,
-            "listen": 55,
-            "library_use": 70,
-            "psychology": 45,
-            "forensics": 40
-        },
-        "combat_survival": {
-            "handgun": 55,
-            "brawl": 45,
-            "dodge": 50,
-            "stealth": 45,
-            "first_aid": 55
-        },
-        "technical_knowledge": {
-            "computer_use": 60,
-            "mechanical_repair": 30,
-            "electrical_repair": 30,
-            "anomalous_theory": 35,
-            "foundation_lore": 65,
-            "anomalous_studies": 40
-        },
-        "social": {
-            "charm": 35,
-            "fast_talk": 30,
-            "intimidate": 40,
-            "persuade": 50
-        },
-        "other": {
-            "drive_auto": 40,
-            "navigate": 35,
-            "english": 70,
-            "spanish": 30
-        }
+    "technical_knowledge": {
+      "computer_use": 60,
+      "mechanical_repair": 30,
+      "electrical_repair": 30,
+      "anomalous_theory": 35,
+      "foundation_lore": 65,
+      "anomalous_studies": 40
     },
-    "combat_rolls": {
-        "brawl": {
-            "damage": "1D3",
-            "att_per_round": 1
-        },
-        "handgun": {
-            "damage": "1D10",
-            "range": 20,
-            "att_per_round": 2
-        }
+    "social": {
+      "charm": 35,
+      "fast_talk": 30,
+      "intimidate": 40,
+      "persuade": 50
     },
-    "background": {
-        "specialization": "Field Investigation & Anomalous Incident Response (AIR). Experience with initial assessment and containment of newly discovered anomalies.",
-        "reason_joining_found": "Recruited after demonstrating unusual resilience and observational skills during an anomalous event encountered as a civilian (e.g., local law enforcement officer). ",
-        "ideology": " Pragmatic Survivalist. Believes in the Foundation's mission but prioritizes mission completion and personal survival through careful assessment and adaptation. Wary of unnecessary risks and bureaucratic dogma.",
-        "contact": "Dr. Lena Petrova (Site-42 Xenobotanist) - A trusted academic contact from a previous case.",
-        "incidents": "Incident Sigma-12 survivor (Containment breach involving a memetic entity). Resulted in heightened awareness of cognitive threats but lingering unease. ",
-        "possession": "A worn Zippo lighter, non-functional, engraved with a simple geometric pattern (non-anomalous). A reminder of a pre-Foundation life. ",
-        "description": "Average height, practical build. Features are unremarkable, easily blending into a crowd – a useful trait. Eyes are observant and rarely betray emotion. Moves with quiet efficiency."
-    },
-    "inventory": {
-        "sidearm": {
-            "name": "Foundation Standard Sidearm (9mm)",
-            "type": "firearm",
-            "still_have": true,
-            "loaded": false,
-            "ammo_capacity": 15,
-            "ammo_type": "9mm",
-            "quantity": 1
-        },
-        "9mm_ammo": {
-            "name": "9mm Ammo",
-            "type": "ammo",
-            "still_have": true,
-            "quantity": 45
-        },
-        "pda": {
-            "name": "Foundatoin Encrypted PDA",
-            "type": "portable_computer",
-            "still_have": true,
-            "charged": true,
-            "on": false,
-            "quantity": 1
-        },
-        "field_kit": {
-            "name": "Standard Field Kit",
-            "type": "container",
-            "still_have": true,
-            "empty": false,
-            "quantity": 1,
-            "contents": {
-               "trauma_pack": {
-                    "name": "Trauma Pack",
-                    "type": "first_aid",
-                    "still_have": true,
-                    "quantity": 3,
-                    "healing": "1D4"
-               },
-               "flashlight": {
-                "name": "High-lumen flashlight",
-                "type": "flashlight",
-                "still_have": true,
-                "quantity": 1,
-                "charged": true,
-                "on": false
-               },
-               "multitool": {
-                "name": "Multi-tool",
-                "type": "tool",
-                "still_have": true,
-                "quantity": 1
-               },
-               "scanner": {
-                "name": "Basic Hazard Scanner",
-                "type": "portable_computer",
-                "still_have": true,
-                "charged": true,
-                "on": false,
-                "quantity": 1
-               }
-            }
-        },
-        "ownkeycard": {
-            "name": "Level 4 Keycard",
-            "type": "keycard",
-            "access_level": 4,
-            "still_have": true,
-            "still_activated": true,
-            "quantity": 1
-        },
-        "plainoutfit": {
-            "name": "Plainclothes attire",
-            "type": "outfit",
-            "still_have": true,
-            "wearing": true,
-            "quantity": 1
-        }
-    },
-    "status_flags": {
-        "knows_oge_public_story": false,
-        "knows_oge_secret_history": false,
-        "finch_compromised": false,
-        "finch_trust_level": 85,
-        "memetic_exposure": 0,
-        "knows_petrova": false,
-        "knows_gate_locus": false,
-        "knows_julian_thorne_implication": false,
-        "seen_goi_symbol": false,
-        "understands_goi_structure_hypothesis": false,
-        "thorne_suspected_finch": false
+    "other": {
+      "drive_auto": 40,
+      "navigate": 35,
+      "english": 70,
+      "spanish": 30
     }
+  },
+  "combat_rolls": {
+    "brawl": {
+      "damage": "1D3",
+      "att_per_round": 1
+    },
+    "handgun": {
+      "damage": "1D10",
+      "range": 20,
+      "att_per_round": 2
+    }
+  },
+  "background": {
+    "specialization": "Field Investigation & Anomalous Incident Response (AIR). Experience with initial assessment and containment of newly discovered anomalies.",
+    "reason_joining_found": "Recruited after demonstrating unusual resilience and observational skills during an anomalous event encountered as a civilian (e.g., local law enforcement officer). ",
+    "ideology": " Pragmatic Survivalist. Believes in the Foundation's mission but prioritizes mission completion and personal survival through careful assessment and adaptation. Wary of unnecessary risks and bureaucratic dogma.",
+    "contact": "Dr. Lena Petrova (Site-42 Xenobotanist) - A trusted academic contact from a previous case.",
+    "incidents": "Incident Sigma-12 survivor (Containment breach involving a memetic entity). Resulted in heightened awareness of cognitive threats but lingering unease. ",
+    "possession": "A worn Zippo lighter, non-functional, engraved with a simple geometric pattern (non-anomalous). A reminder of a pre-Foundation life. ",
+    "description": "Average height, practical build. Features are unremarkable, easily blending into a crowd – a useful trait. Eyes are observant and rarely betray emotion. Moves with quiet efficiency."
+  },
+  "inventory": {
+    "sidearm": {
+      "name": "Foundation Standard Sidearm (9mm)",
+      "type": "firearm",
+      "still_have": true,
+      "loaded": false,
+      "ammo_capacity": 15,
+      "ammo_type": "9mm",
+      "quantity": 1
+    },
+    "9mm_ammo": {
+      "name": "9mm Ammo",
+      "type": "ammo",
+      "still_have": true,
+      "quantity": 45
+    },
+    "pda": {
+      "name": "Foundation Encrypted PDA",
+      "type": "portable_computer",
+      "still_have": true,
+      "charged": true,
+      "on": false,
+      "quantity": 1
+    },
+    "field_kit": {
+      "name": "Standard Field Kit",
+      "type": "container",
+      "still_have": true,
+      "empty": false,
+      "quantity": 1,
+      "contents": {
+        "trauma_pack": {
+          "name": "Trauma Pack",
+          "type": "first_aid",
+          "still_have": true,
+          "quantity": 3,
+          "healing": "1D4"
+        },
+        "flashlight": {
+          "name": "High-lumen flashlight",
+          "type": "flashlight",
+          "still_have": true,
+          "quantity": 1,
+          "charged": true,
+          "on": false
+        },
+        "multitool": {
+          "name": "Multi-tool",
+          "type": "tool",
+          "still_have": true,
+          "quantity": 1
+        },
+        "scanner": {
+          "name": "Basic Hazard Scanner",
+          "type": "portable_computer",
+          "still_have": true,
+          "charged": true,
+          "on": false,
+          "quantity": 1
+        }
+      }
+    },
+    "ownkeycard": {
+      "name": "Level 4 Keycard",
+      "type": "keycard",
+      "access_level": 4,
+      "still_have": true,
+      "still_activated": true,
+      "quantity": 1
+    },
+    "plainoutfit": {
+      "name": "Plainclothes attire",
+      "type": "outfit",
+      "still_have": true,
+      "wearing": true,
+      "quantity": 1
+    }
+  },
+  "status_flags": {
+    "knows_oge_public_story": false,
+    "knows_oge_secret_history": false,
+    "finch_compromised": false,
+    "finch_trust_level": 85,
+    "memetic_exposure": 0,
+    "knows_petrova": false,
+    "knows_gate_locus": false,
+    "knows_julian_thorne_implication": false,
+    "seen_goi_symbol": false,
+    "understands_goi_structure_hypothesis": false,
+    "thorne_suspected_finch": false
+  }
 }

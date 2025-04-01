@@ -24,7 +24,27 @@ class MainMenuStrings:
     PROPER_INPUT_RESPONSES = ['n', 'l', 'o', 'q']
     INVALID_SELECTION = "Your selection is not valid. Please try again."
 
-# You might add other classes here for different parts of the game later, e.g.:
-# class GameMessages:
-#     SAVE_SUCCESS = "Game saved successfully."
-#     LOAD_FAILED = "Failed to load save file."
+
+class OpeningScreenMessages:
+    """Contains string constants for the opening scene sequence."""
+    INTRO = [
+        "// PREMONITION FRAGMENT - SOURCE UNKNOWN - CORRELATION: AGENT ROOK\n\n",
+        "You are standing in the sterile white corridor of a high-security",
+        "Foundation wing... reinforced door marked... DIRECTOR A. FINCH..",
+        "sudden, sharp *crack* echoes from within... sound of something heavy",
+        "collapsing... ice-cold dread... override the lock sequence...",
+        "\n\n// FRAGMENT END - SIGNAL LOST //"
+    ]
+
+
+class OtherConstants:
+    """Contains miscellaneous constants used in the game."""
+    SLEEP = 1 # Default sleep time in seconds for text pacing
+    
+LOGGING_FORMAT = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+LOGGING_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+LOGGING_FILENAME = 'game.log'
+FILEMODE_W = 'w'
+LOGGING_START = "Application started."
+LOGGING_GAMESTART = "Displaying main menu."
+LOGGING_STOP = "Application finished."

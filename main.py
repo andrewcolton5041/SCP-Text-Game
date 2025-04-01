@@ -14,9 +14,6 @@ def main():
     # Display the main menu - this function contains the menu loop
     mm.display_main_menu()
 
-    # This code runs after the menu loop has exited (player chose Quit)
-    print("\nGame has exited. Program terminating.")
-
 # Standard Python entry point check
 if __name__ == "__main__":
     main()
