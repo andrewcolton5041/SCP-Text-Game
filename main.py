@@ -5,10 +5,13 @@ Sets up logging and starts the main menu.
 """
 import logging
 import sys
-from typing import Optional, Callable, Union
+from typing import Optional, Callable, Union, Type, TypeVar
 
-from src.main_menu import display_main_menu  # Import the specific function
+from src.main_menu import display_main_menu
 from src.enums import GameState
+
+# Type variable for return type of menu function
+T = TypeVar('T', bound=GameState)
 
 # --- Logging Configuration ---
 def configure_logging() -> None:
@@ -16,6 +19,7 @@ def configure_logging() -> None:
     Configure logging for the application.
     
     Sets up logging with a standard format and INFO level logging.
+    Configures basic logging with predefined format and date format.
     """
     logging.basicConfig(
         level=logging.INFO,
@@ -27,7 +31,7 @@ def configure_logging() -> None:
 def main(
     menu_func: Optional[Callable[[], GameState]] = None, 
     log_config_func: Optional[Callable[[], None]] = None
-) -> Union[int, None]:
+) -> int:
     """
     Sets up the game environment and starts the main menu.
     
@@ -38,7 +42,7 @@ def main(
             Function to configure logging. Defaults to configure_logging.
     
     Returns:
-        Union[int, None]: Exit code (0 for successful exit, 1 for error, None if not specified)
+        int: Exit code (0 for successful exit, 1 for error)
     """
     try:
         # Use provided or default logging configuration
