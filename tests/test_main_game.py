@@ -2,48 +2,44 @@
 """
 Unit tests for the main game logic in src/main_game.py.
 """
-
-import time
 import pytest
+from unittest.mock import Mock # Import Mock
 
 # Modules involved in the test
 from src import main_game
 from src import opening_scene
-from src.constants import GameMessages # Import the constant we expect to be printed
+from src import utilities # Import utilities
+from src.constants import BriefingMessages # Use BriefingMessages
 
-# Keep track of whether the mocked function was called
-mock_opening_scene_called = False
-
-def dummy_opening_scene_start():
-    """A dummy function to replace opening_scene.opening_scene_start."""
-    global mock_opening_scene_called
-    mock_opening_scene_called = True
-    # print("Dummy opening_scene_start called") # Optional debug print
-
-def dummy_sleep(seconds):
-    """A dummy function to replace time.sleep."""
-    # print(f"Skipping sleep({seconds})") # Optional debug print
-    pass
+# --- Remove Global Flags and Dummy Functions ---
+# Remove:
+# mock_opening_scene_called = False
+# def dummy_opening_scene_start(): ...
+# def dummy_sleep(seconds): ... # Keep if mocking time.sleep is still needed elsewhere
+# mock_clear_screen_calls = 0 # Remove if added previously
+# def mock_clear_screen(): ... # Remove if added previously
 
 def test_start_new_game_flow(monkeypatch, capsys):
     """
-    Tests the start_new_game function's basic execution flow:
+    Tests the start_new_game function's execution flow:
     - Calls opening_scene_start (mocked).
-    - Prints the game start confirmation message.
-    - Runs without error and without actual sleep delay.
-
-    Args:
-        monkeypatch: pytest fixture to modify modules/functions.
-        capsys: pytest fixture to capture stdout/stderr.
+    - Clears screen (mocked).
+    - Prints the briefing memo sequentially (via mocked utility).
+    - Waits for acknowledgement input.
+    - Runs without error.
     """
-    # Arrange: Reset call tracker and patch dependencies
-    global mock_opening_scene_called
-    mock_opening_scene_called = False # Ensure tracker is reset before test
+    # Arrange: Mock dependencies
+    mock_opening = Mock(spec=opening_scene.opening_scene_start)
+    mock_clear = Mock(spec=utilities.clear_screen)
+    mock_display_seq = Mock(spec=utilities.display_text_sequentially) # Mock the utility
 
-    monkeypatch.setattr(opening_scene, "opening_scene_start", dummy_opening_scene_start)
-    monkeypatch.setattr(time, "sleep", dummy_sleep)
-    # Alternative for time.sleep if imported directly in main_game:
-    # monkeypatch.setattr(main_game.time, "sleep", dummy_sleep)
+    monkeypatch.setattr(opening_scene, "opening_scene_start", mock_opening)
+    monkeypatch.setattr(utilities, "clear_screen", mock_clear)
+    monkeypatch.setattr(utilities, "display_text_sequentially", mock_display_seq) # Patch the utility
+
+    # Mock input for acknowledgement
+    inputs = iter([''])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     # Act: Run the function to be tested
     try:
@@ -51,9 +47,13 @@ def test_start_new_game_flow(monkeypatch, capsys):
     except Exception as e:
         pytest.fail(f"main_game.start_new_game() raised an exception: {e}")
 
-    # Assert: Verify the mocked function was called and the correct output was printed
+    # Assert: Verify mocks were called and correct arguments passed
     captured = capsys.readouterr()
 
-    assert mock_opening_scene_called, "opening_scene.opening_scene_start should have been called."
-    assert GameMessages.GAME_START_CONFIRMATION in captured.out, \
-        f"Expected '{GameMessages.GAME_START_CONFIRMATION}' in stdout, but got: '{captured.out}'"
+    mock_opening.assert_called_once()
+    mock_clear.assert_called_once()
+    # Check that display_text_sequentially was called with the memo
+    mock_display_seq.assert_called_once_with(BriefingMessages.FINCH_MEMO_CHIMERA)
+
+    # Check that the final debug message is printed (output after mocks)
+    assert "[DEBUG: Proceeding to Thorne's residence - To be implemented]" in captured.out
