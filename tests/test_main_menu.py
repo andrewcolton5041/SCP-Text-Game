@@ -4,7 +4,12 @@ Unit tests for the main menu logic in src/main_menu.py.
 Uses pytest fixtures monkeypatch (for input/external calls) and capsys (for output).
 """
 import pytest
-from unittest.mock import Mock # Import Mock
+from unittest.mock import Mock
+from typing import Iterator, Optional, List # Added typing imports
+
+# Import types for pytest fixtures
+from _pytest.monkeypatch import MonkeyPatch
+from _pytest.capture import CaptureFixture
 
 # Modules involved in the test
 from src import main_menu
@@ -12,17 +17,17 @@ from src import utilities
 from src import main_game
 from src.constants import MainMenuStrings, EXIT_MESSAGE
 
-# --- Test Functions (Updated) ---
+# --- Test Functions (Updated with Type Hints) ---
 
-def test_main_menu_quit_immediately(monkeypatch, capsys):
+def test_main_menu_quit_immediately(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the flow: Show title -> Press Enter -> Show menu -> Input 'q' -> Exit."""
     # Arrange: Simulate user pressing Enter, then 'q'
-    inputs = iter(['', 'q'])
+    inputs: Iterator[str] = iter(['', 'q'])
 
     # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # Print the prompt like the real input()
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
@@ -38,124 +43,99 @@ def test_main_menu_quit_immediately(monkeypatch, capsys):
 
     # Assert: Check output and mock calls
     captured = capsys.readouterr()
-    # Expected calls: Title clear, Menu clear, Final clear on quit
     assert mock_clear.call_count >= 3
     assert MainMenuStrings.TITLE in captured.out
-    # Check that the prompt for the title screen was printed
     assert MainMenuStrings.ENTER_TO_CONTINUE in captured.out
     assert MainMenuStrings.MAIN_MENU_TITLE in captured.out
-    # Check that the prompt for menu input was printed
     assert MainMenuStrings.INPUT_REQUEST in captured.out
     assert MainMenuStrings.QUIT in captured.out
     assert EXIT_MESSAGE in captured.out
 
-def test_main_menu_start_new_game(monkeypatch, capsys):
+def test_main_menu_start_new_game(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the flow: Enter -> 'n' -> Enter (after game msg) -> 'q'."""
-    # Arrange: Simulate inputs
-    inputs = iter(['', 'n', '', 'q'])
+    inputs: Iterator[str] = iter(['', 'n', '', 'q'])
 
-    # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='')
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
             raise EOFError("Mock input called too many times.")
     monkeypatch.setattr('builtins.input', mock_input_that_prints)
 
-    # Create Mocks
     mock_clear = Mock(spec=utilities.clear_screen)
     mock_start_game = Mock(spec=main_game.start_new_game)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
     monkeypatch.setattr(main_game, 'start_new_game', mock_start_game)
 
-    # Act
     main_menu.display_main_menu()
 
-    # Assert
     captured = capsys.readouterr()
-    # Expected calls: Title, Menu, After 'n', Menu again, Final clear
     assert mock_clear.call_count >= 5
-    mock_start_game.assert_called_once() # Verify game start was called exactly once
+    mock_start_game.assert_called_once()
     assert "Starting New Game..." in captured.out
-    # Check that the prompt after game message was printed
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
 
-def test_main_menu_invalid_input_then_quit(monkeypatch, capsys):
+def test_main_menu_invalid_input_then_quit(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the flow: Enter -> Invalid input 'x' -> Enter (ack error) -> 'q'."""
-    # Arrange: Simulate inputs
-    inputs = iter(['', 'x', '', 'q'])
+    inputs: Iterator[str] = iter(['', 'x', '', 'q'])
 
-    # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='')
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
             raise EOFError("Mock input called too many times.")
     monkeypatch.setattr('builtins.input', mock_input_that_prints)
 
-    # Create Mock
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
-    # No need to mock start_new_game for this path
 
-    # Act
     main_menu.display_main_menu()
 
-    # Assert
     captured = capsys.readouterr()
-    # Expected calls: Title, Menu, After invalid input ack, Menu again, Final clear
-    assert mock_clear.call_count >= 4 # Corrected count
+    assert mock_clear.call_count >= 4
     assert MainMenuStrings.INVALID_SELECTION in captured.out
-    # Check that the prompt for invalid input acknowledgement was printed
     assert "Press Enter to try again..." in captured.out
-    # Check menu title appears at least twice (initial + after invalid)
     assert captured.out.count(MainMenuStrings.MAIN_MENU_TITLE) >= 2
     assert EXIT_MESSAGE in captured.out
 
-def test_main_menu_case_insensitive_input(monkeypatch, capsys):
+def test_main_menu_case_insensitive_input(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests that input 'N' is treated the same as 'n'."""
-    # Arrange: Use uppercase 'N'
-    inputs = iter(['', 'N', '', 'q'])
+    inputs: Iterator[str] = iter(['', 'N', '', 'q'])
 
-    # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='')
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
             raise EOFError("Mock input called too many times.")
     monkeypatch.setattr('builtins.input', mock_input_that_prints)
 
-    # Create Mocks
     mock_clear = Mock(spec=utilities.clear_screen)
     mock_start_game = Mock(spec=main_game.start_new_game)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
     monkeypatch.setattr(main_game, 'start_new_game', mock_start_game)
 
-    # Act
     main_menu.display_main_menu()
 
-    # Assert
     captured = capsys.readouterr()
-    mock_start_game.assert_called_once() # Verify game started even with 'N'
+    mock_start_game.assert_called_once()
     assert "Starting New Game..." in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
 
-def test_main_menu_load_game_path(monkeypatch, capsys):
+def test_main_menu_load_game_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the (currently not implemented) 'Load Game' path."""
-    inputs = iter(['', 'l', '', 'q'])
+    inputs: Iterator[str] = iter(['', 'l', '', 'q'])
 
-    # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='')
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
@@ -165,23 +145,20 @@ def test_main_menu_load_game_path(monkeypatch, capsys):
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
-    # Act
     main_menu.display_main_menu()
 
-    # Assert
     captured = capsys.readouterr()
     assert "Loading Game... (Not implemented yet)" in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
 
-def test_main_menu_options_path(monkeypatch, capsys):
+def test_main_menu_options_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the (currently not implemented) 'Options' path."""
-    inputs = iter(['', 'o', '', 'q'])
+    inputs: Iterator[str] = iter(['', 'o', '', 'q'])
 
-    # Define mock input function that prints prompt
-    def mock_input_that_prints(prompt=None):
+    def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='')
+            print(prompt, end='') # type: ignore
         try:
             return next(inputs)
         except StopIteration:
@@ -191,10 +168,8 @@ def test_main_menu_options_path(monkeypatch, capsys):
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
-    # Act
     main_menu.display_main_menu()
 
-    # Assert
     captured = capsys.readouterr()
     assert "Opening Options... (Not implemented yet)" in captured.out
     assert "Press Enter to return to menu..." in captured.out

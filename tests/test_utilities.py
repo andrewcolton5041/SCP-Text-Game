@@ -1,36 +1,73 @@
-# Add to tests/test_utilities.py
+# tests/test_utilities.py
+"""
+Unit tests for the utility functions in src/utilities.py.
+"""
 import pytest
 import time
+from unittest.mock import Mock # Keep Mock import if used elsewhere
+from typing import List, Any # Added typing imports
+
+# Import types for pytest fixtures
+from _pytest.monkeypatch import MonkeyPatch
+from _pytest.capture import CaptureFixture
+
 from src import utilities
 from src.constants import OtherConstants # For default sleep time
 
-# Mock time.sleep globally for utility tests if needed, or per test
+# --- Fixtures ---
+
 @pytest.fixture(autouse=True)
-def mock_sleep(monkeypatch):
-    """Mock time.sleep to avoid actual pauses during tests."""
-    mock_sleep.call_count = 0 # Use function attribute to track calls
-    def dummy_sleep(seconds):
-        mock_sleep.call_count += 1
-        # print(f"Mock sleep called with {seconds}s") # Optional debug
-    monkeypatch.setattr(time, "sleep", dummy_sleep)
-    return mock_sleep # Return the mock object/tracker if needed
+def mock_sleep(monkeypatch: MonkeyPatch) -> Mock:
+    """Mock time.sleep to avoid actual pauses and track calls."""
+    mock_sleep_obj = Mock(spec=time.sleep)
+    monkeypatch.setattr(time, "sleep", mock_sleep_obj)
+    return mock_sleep_obj # Return the mock object for potential assertions
 
-def test_display_text_sequentially_with_string(capsys, mock_sleep):
+# --- Test Functions ---
+
+def test_clear_screen(monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture) -> None:
+    """Tests that clear_screen calls the correct os.system command and logs."""
+    # We don't know the platform, so mock os.system
+    mock_os_system = Mock()
+    monkeypatch.setattr(utilities.os, "system", mock_os_system)
+    # Mock platform.system to control the path taken
+    monkeypatch.setattr(utilities.platform, "system", lambda: "Linux") # Example: Linux
+
+    utilities.clear_screen()
+
+    mock_os_system.assert_called_once_with('clear')
+    assert "Screen cleared on platform: Linux" in caplog.text
+
+    # Test Windows path
+    mock_os_system.reset_mock()
+    monkeypatch.setattr(utilities.platform, "system", lambda: "Windows")
+    utilities.clear_screen()
+    mock_os_system.assert_called_once_with('cls')
+
+
+def test_display_text_sequentially_with_string(
+    capsys: CaptureFixture, mock_sleep: Mock
+) -> None:
     """Test displaying a multi-line string sequentially."""
-    test_string = "Line 1\nLine 2\n\nLine 4"
-    expected_lines = ["Line 1", "Line 2", "", "Line 4"]
-    expected_output = "\n".join(expected_lines) + "\n" # print adds newline
+    test_string: str = "Line 1\nLine 2\n\nLine 4"
+    expected_lines: List[str] = ["Line 1", "Line 2", "", "Line 4"]
+    expected_output: str = "\n".join(expected_lines) + "\n" # print adds newline
 
-    utilities.display_text_sequentially(test_string, delay=0.01) # Use small delay
+    utilities.display_text_sequentially(test_string, delay=0.01)
 
     captured = capsys.readouterr()
     assert captured.out == expected_output
     assert mock_sleep.call_count == len(expected_lines) # Sleep called for each line
+    # Check if delay was passed correctly (optional)
+    mock_sleep.assert_called_with(0.01)
 
-def test_display_text_sequentially_with_list(capsys, mock_sleep):
+
+def test_display_text_sequentially_with_list(
+    capsys: CaptureFixture, mock_sleep: Mock
+) -> None:
     """Test displaying a list of strings sequentially."""
-    test_list = ["First line.", "Second line.", "Third."]
-    expected_output = "\n".join(test_list) + "\n"
+    test_list: List[str] = ["First line.", "Second line.", "Third."]
+    expected_output: str = "\n".join(test_list) + "\n"
 
     utilities.display_text_sequentially(test_list, delay=0.01)
 
@@ -38,22 +75,29 @@ def test_display_text_sequentially_with_list(capsys, mock_sleep):
     assert captured.out == expected_output
     assert mock_sleep.call_count == len(test_list)
 
-def test_display_text_sequentially_uses_default_delay(monkeypatch):
+
+def test_display_text_sequentially_uses_default_delay(
+    monkeypatch: MonkeyPatch, mock_sleep: Mock
+) -> None:
     """Verify default delay is used if none provided."""
-    sleep_seconds_recorded = []
-    def record_sleep(seconds):
-        sleep_seconds_recorded.append(seconds)
-    monkeypatch.setattr(time, "sleep", record_sleep)
+    # mock_sleep fixture already patches time.sleep
+    test_list: List[str] = ["Test"]
+    utilities.display_text_sequentially(test_list)
 
-    utilities.display_text_sequentially(["Test"])
+    assert mock_sleep.call_count == 1
+    # Assert that sleep was called with the default value from constants
+    mock_sleep.assert_called_once_with(OtherConstants.SLEEP)
 
-    assert len(sleep_seconds_recorded) == 1
-    assert sleep_seconds_recorded[0] == OtherConstants.SLEEP
 
-def test_display_text_sequentially_handles_unsupported_type(capsys, mock_sleep):
+def test_display_text_sequentially_handles_unsupported_type(
+    capsys: CaptureFixture, mock_sleep: Mock, caplog: pytest.LogCaptureFixture
+) -> None:
     """Test handling of unsupported data types."""
-    test_data = 12345
-    utilities.display_text_sequentially(test_data)
+    test_data: int = 12345
+    # Add type: ignore comment to tell mypy this specific line is intentional
+    utilities.display_text_sequentially(test_data) # type: ignore[arg-type]
     captured = capsys.readouterr()
+
     assert "Error: Cannot display text" in captured.out
-    assert mock_sleep.call_count == 0 # Should not sleep if error occurs early
+    assert "Unsupported text_data type" in caplog.text
+    assert mock_sleep.call_count == 0 # Should not sleep if error occurs earlyy

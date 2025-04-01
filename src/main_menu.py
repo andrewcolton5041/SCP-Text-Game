@@ -48,7 +48,7 @@ def _get_valid_menu_input() -> str:
 
 # --- Main Menu Function (Refactored) ---
 
-def display_main_menu():
+def display_main_menu() -> None:
     """
     Displays the game title, waits, then shows and handles the main menu.
     """
