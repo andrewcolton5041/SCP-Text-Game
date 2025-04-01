@@ -18,14 +18,14 @@ class GameSession:
     Centralizes game state management and control flow.
     """
     
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize a new game session with default states."""
         self.game_state = None  # Will be set to GameStateModel instance during start_new_game
         self.current_state = GameStateEnum.INITIALIZING
         self.interaction_state = InteractionState.EXPLORATION
         logger.info("Game session initialized with state %s", self.current_state)
     
-    def transition_to(self, new_state):
+    def transition_to(self, new_state: GameStateEnum) -> None:
         """
         Transition to a new game state.
         
@@ -47,7 +47,7 @@ class GameSession:
             if old_state == GameStateEnum.NEW_GAME:
                 self._start_gameplay()
     
-    def set_interaction_state(self, new_interaction_state):
+    def set_interaction_state(self, new_interaction_state: InteractionState) -> None:
         """
         Set the current interaction mode.
         
@@ -65,7 +65,7 @@ class GameSession:
         if self.game_state:
             self.game_state.current_interaction_state = new_interaction_state
     
-    def _initialize_new_game(self):
+    def _initialize_new_game(self) -> None:
         """Initialize a new game with default player and starting location."""
         # Create player character
         player = Character(name="Agent Rook", age=34)
@@ -86,13 +86,13 @@ class GameSession:
         
         logger.info("New game initialized with player %s", player.name)
     
-    def _start_gameplay(self):
+    def _start_gameplay(self) -> None:
         """Transition from setup to active gameplay."""
         # Any additional setup needed before gameplay starts
         self.set_interaction_state(InteractionState.EXPLORATION)
         # TODO: Implement first scene description/interaction
 
-    def main_game_loop(self):
+    def main_game_loop(self) -> None:
         """Run the main game loop based on current state."""
         logger.info("Entering main game loop in state %s", self.current_state)
         
@@ -111,7 +111,7 @@ class GameSession:
                 logger.error("Unhandled game state: %s", self.current_state)
                 break
     
-    def _handle_playing_state(self):
+    def _handle_playing_state(self) -> None:
         """Handle the main PLAYING state logic."""
         # TODO: Implement based on interaction_state
         # For now, just a placeholder
@@ -124,19 +124,19 @@ class GameSession:
         else:
             print("Command not implemented yet.")
     
-    def _handle_dialogue_state(self):
+    def _handle_dialogue_state(self) -> None:
         """Handle dialogue interaction state."""
         # TODO: Implement dialogue system
         print("Dialogue system not implemented yet.")
         self.transition_to(GameStateEnum.PLAYING)
     
-    def _handle_combat_state(self):
+    def _handle_combat_state(self) -> None:
         """Handle combat interaction state."""
         # TODO: Implement combat system
         print("Combat system not implemented yet.")
         self.transition_to(GameStateEnum.PLAYING)
     
-    def _handle_paused_state(self):
+    def _handle_paused_state(self) -> None:
         """Handle game paused state."""
         print("\nGame is paused. Resume or quit?")
         choice = input("[R]esume or [Q]uit: ").lower()
@@ -151,7 +151,7 @@ class GameSession:
 _game_session = None
 
 
-def start_new_game():
+def start_new_game() -> None:
     """Initiates the sequence for starting a new game."""
     global _game_session
     logger.info("New game selected. Starting sequence.")
@@ -180,6 +180,9 @@ def start_new_game():
     
     # 6. Transition to active gameplay state
     _game_session.transition_to(GameStateEnum.PLAYING)  # Fixed: GameState -> GameStateEnum
+    
+    # Right before the "try:" block that starts the main game loop
+    print("[DEBUG: Proceeding to Thorne's residence - To be implemented]")
     
     # 7. Start the main game loop
     try:

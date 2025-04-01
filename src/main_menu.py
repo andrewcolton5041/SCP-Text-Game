@@ -17,12 +17,12 @@ class MainMenu:
     Uses enum-based state management for menu navigation.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the main menu with default state."""
         self.current_state = GameStateEnum.MAIN_MENU
         logger.debug("MainMenu initialized in state %s", self.current_state)
 
-    def display_title_screen(self):
+    def display_title_screen(self) -> None:
         """Display the game title and wait for acknowledgement."""
         logger.debug("Clearing screen for title display.")
         utilities.clear_screen()
@@ -31,7 +31,7 @@ class MainMenu:
         input()  # Wait for any key
         logger.info("Title screen acknowledged by user.")
 
-    def display_menu_options(self):
+    def display_menu_options(self) -> None:
         """Display the main menu options."""
         print(MainMenuStrings.MAIN_MENU_TITLE)
         print(MainMenuStrings.NEW_GAME)
@@ -40,7 +40,7 @@ class MainMenu:
         print(MainMenuStrings.QUIT)
         print()  # Add a blank line for spacing
 
-    def get_valid_menu_input(self):
+    def get_valid_menu_input(self) -> str:
         """
         Prompt for and validate user menu selection.
 
@@ -64,7 +64,7 @@ class MainMenu:
                 logger.info("Valid menu selection: '%s'", selection_lower)
                 return selection_lower  # Return the valid input
 
-    def handle_menu_selection(self, selection):
+    def handle_menu_selection(self, selection) -> bool:
         """
         Handle a validated menu selection.
 
@@ -115,7 +115,7 @@ class MainMenu:
         return True
 
 
-def display_main_menu():
+def display_main_menu() -> None:
     """
     Display and handle the main menu until user quits.
     Entry point for the main menu system.
