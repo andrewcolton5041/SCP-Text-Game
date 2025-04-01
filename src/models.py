@@ -17,7 +17,6 @@ from .enums import (
     InteractionState
 )
 
-
 @dataclass
 class CharacteristicStats:
     """Character base attributes/characteristics."""

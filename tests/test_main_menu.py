@@ -5,7 +5,7 @@ Uses pytest fixtures monkeypatch (for input/external calls) and capsys (for outp
 """
 import pytest
 from unittest.mock import Mock
-from typing import Iterator, Optional, List # Added typing imports
+from typing import Iterator, Optional
 
 # Import types for pytest fixtures
 from _pytest.monkeypatch import MonkeyPatch
@@ -15,8 +15,8 @@ from _pytest.capture import CaptureFixture
 from src import main_menu
 from src import utilities
 from src import main_game
-from src.constants import MainMenuStrings, EXIT_MESSAGE# In tests/test_main_menu.py, update the imports to:
-from src.main_menu import display_main_menu  # Import the specific function
+from src.constants import MainMenuStrings, EXIT_MESSAGE
+from src.enums import GameState as GameStateEnum  # Updated import
 
 # --- Test Functions (Updated with Type Hints) ---
 
@@ -28,7 +28,7 @@ def test_main_menu_quit_immediately(monkeypatch: MonkeyPatch, capsys: CaptureFix
     # Define mock input function that prints prompt
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -40,7 +40,7 @@ def test_main_menu_quit_immediately(monkeypatch: MonkeyPatch, capsys: CaptureFix
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
     # Act: Run the main menu function
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     # Assert: Check output and mock calls
     captured = capsys.readouterr()
@@ -51,6 +51,10 @@ def test_main_menu_quit_immediately(monkeypatch: MonkeyPatch, capsys: CaptureFix
     assert MainMenuStrings.INPUT_REQUEST in captured.out
     assert MainMenuStrings.QUIT in captured.out
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING
 
 def test_main_menu_start_new_game(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the flow: Enter -> 'n' -> Enter (after game msg) -> 'q'."""
@@ -58,7 +62,7 @@ def test_main_menu_start_new_game(monkeypatch: MonkeyPatch, capsys: CaptureFixtu
 
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -70,7 +74,7 @@ def test_main_menu_start_new_game(monkeypatch: MonkeyPatch, capsys: CaptureFixtu
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
     monkeypatch.setattr(main_game, 'start_new_game', mock_start_game)
 
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     captured = capsys.readouterr()
     assert mock_clear.call_count >= 5
@@ -78,6 +82,10 @@ def test_main_menu_start_new_game(monkeypatch: MonkeyPatch, capsys: CaptureFixtu
     assert "Starting New Game..." in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING
 
 def test_main_menu_invalid_input_then_quit(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the flow: Enter -> Invalid input 'x' -> Enter (ack error) -> 'q'."""
@@ -85,7 +93,7 @@ def test_main_menu_invalid_input_then_quit(monkeypatch: MonkeyPatch, capsys: Cap
 
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -95,7 +103,7 @@ def test_main_menu_invalid_input_then_quit(monkeypatch: MonkeyPatch, capsys: Cap
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     captured = capsys.readouterr()
     assert mock_clear.call_count >= 4
@@ -103,6 +111,10 @@ def test_main_menu_invalid_input_then_quit(monkeypatch: MonkeyPatch, capsys: Cap
     assert "Press Enter to try again..." in captured.out
     assert captured.out.count(MainMenuStrings.MAIN_MENU_TITLE) >= 2
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING
 
 def test_main_menu_case_insensitive_input(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests that input 'N' is treated the same as 'n'."""
@@ -110,7 +122,7 @@ def test_main_menu_case_insensitive_input(monkeypatch: MonkeyPatch, capsys: Capt
 
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -122,13 +134,17 @@ def test_main_menu_case_insensitive_input(monkeypatch: MonkeyPatch, capsys: Capt
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
     monkeypatch.setattr(main_game, 'start_new_game', mock_start_game)
 
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     captured = capsys.readouterr()
     mock_start_game.assert_called_once()
     assert "Starting New Game..." in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING
 
 def test_main_menu_load_game_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the (currently not implemented) 'Load Game' path."""
@@ -136,7 +152,7 @@ def test_main_menu_load_game_path(monkeypatch: MonkeyPatch, capsys: CaptureFixtu
 
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -146,12 +162,16 @@ def test_main_menu_load_game_path(monkeypatch: MonkeyPatch, capsys: CaptureFixtu
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     captured = capsys.readouterr()
     assert "Loading Game... (Not implemented yet)" in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING
 
 def test_main_menu_options_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
     """Tests the (currently not implemented) 'Options' path."""
@@ -159,7 +179,7 @@ def test_main_menu_options_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture
 
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -169,9 +189,13 @@ def test_main_menu_options_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture
     mock_clear = Mock(spec=utilities.clear_screen)
     monkeypatch.setattr(utilities, 'clear_screen', mock_clear)
 
-    main_menu.display_main_menu()
+    final_state = main_menu.display_main_menu()
 
     captured = capsys.readouterr()
     assert "Opening Options... (Not implemented yet)" in captured.out
     assert "Press Enter to return to menu..." in captured.out
     assert EXIT_MESSAGE in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state == GameStateEnum.QUITTING

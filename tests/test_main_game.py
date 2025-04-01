@@ -4,7 +4,7 @@ Unit tests for the main game logic in src/main_game.py.
 """
 import pytest
 from unittest.mock import Mock
-from typing import Iterator, Any, Optional # Added typing imports
+from typing import Iterator, Any, Optional
 
 # Import types for pytest fixtures
 from _pytest.monkeypatch import MonkeyPatch
@@ -15,7 +15,8 @@ from src import main_game
 from src import opening_scene
 from src import utilities
 from src.constants import BriefingMessages
-from src.enums import GameState as GameStateEnum  # Added import for GameStateEnum
+from src.enums import GameState as GameStateEnum  # Explicit import of enum
+
 # --- Test Functions ---
 
 def test_start_new_game_flow(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -> None:
@@ -40,7 +41,7 @@ def test_start_new_game_flow(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -
     inputs: Iterator[str] = iter([''])
     def mock_input_that_prints(prompt: Optional[str] = None) -> str:
         if prompt:
-            print(prompt, end='') # type: ignore
+            print(prompt, end='')
         try:
             return next(inputs)
         except StopIteration:
@@ -49,7 +50,7 @@ def test_start_new_game_flow(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -
 
     # Act: Run the function to be tested
     try:
-        main_game.start_new_game()
+        final_state = main_game.start_new_game()
     except Exception as e:
         pytest.fail(f"main_game.start_new_game() raised an exception: {e}")
 
@@ -66,3 +67,11 @@ def test_start_new_game_flow(monkeypatch: MonkeyPatch, capsys: CaptureFixture) -
 
     # Check that the final debug message is printed (output after mocks)
     assert "[DEBUG: Proceeding to Thorne's residence - To be implemented]" in captured.out
+    
+    # Verify the returned state is a GameStateEnum
+    assert isinstance(final_state, GameStateEnum)
+    assert final_state in [
+        GameStateEnum.PLAYING, 
+        GameStateEnum.QUITTING,  # In case of early exit
+        GameStateEnum.GAME_OVER
+    ]
