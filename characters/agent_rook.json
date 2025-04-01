@@ -29,12 +29,10 @@
             "spot_hidden": 65,
             "listen": 55,
             "library_use": 70,
-            "database_search": 70,
             "psychology": 45,
-            "track": 40,
             "forensics": 40
         },
-        "Combat_survival": {
+        "combat_survival": {
             "handgun": 55,
             "brawl": 45,
             "dodge": 50,
@@ -47,8 +45,7 @@
             "electrical_repair": 30,
             "anomalous_theory": 35,
             "foundation_lore": 65,
-            "anomalous_studies": 40,
-            "occult": 40
+            "anomalous_studies": 40
         },
         "social": {
             "charm": 35,
@@ -61,19 +58,17 @@
             "navigate": 35,
             "english": 70,
             "spanish": 30
-        },
-        "combat": {
-            "brawl": {
-                "damage": "1D3",
-                "att_per_round": 1
-            },
-            "handgun": {
-                "damage": "1D10",
-                "range": 20,
-                "att_per_round": 2,
-                "ammo": 16
-            }
         }
+    },
+    "combat_rolls": {
+        "brawl": {
+            "damage": "1D3",
+            "att_per_round": 1
+        },
+        "handgun": {
+            "damage": "1D10",
+            "range": 20,
+            "att_per_round": 2
     },
     "background": {
         "specialization": "Field Investigation & Anomalous Incident Response (AIR). Experience with initial assessment and containment of newly discovered anomalies.",
@@ -85,20 +80,22 @@
         "description": "Average height, practical build. Features are unremarkable, easily blending into a crowd – a useful trait. Eyes are observant and rarely betray emotion. Moves with quiet efficiency."
     },
     "inventory": {
-        "item_1": {
+        "sidearm": {
             "name": "Foundation Standard Sidearm (9mm)",
             "type": "firearm",
             "still_have": true,
             "loaded": false,
+            "ammo_capacity": 15,
+            "ammo_type": "9mm",
             "quantity": 1
         },
-        "item_2": {
-            "name": "Ammo",
+        "9mm_ammo": {
+            "name": "9mm Ammo",
             "type": "ammo",
             "still_have": true,
             "quantity": 45
         },
-        "item_3": {
+        "pda": {
             "name": "Foundatoin Encrypted PDA",
             "type": "portable_computer",
             "still_have": true,
@@ -106,21 +103,21 @@
             "on": false,
             "quantity": 1
         },
-        "item_4": {
+        "field_kit": {
             "name": "Standard Field Kit",
             "type": "container",
             "still_have": true,
             "empty": false,
             "quantity": 1,
             "contents": {
-               "item_1": {
+               "trauma_pack": {
                     "name": "Trauma Pack",
                     "type": "first_aid",
                     "still_have": true,
                     "quantity": 3,
                     "healing": "1D4"
                },
-               "item_2": {
+               "flashlight": {
                 "name": "High-lumen flashlight",
                 "type": "flashlight",
                 "still_have": true,
@@ -128,13 +125,13 @@
                 "charged": true,
                 "on": false
                },
-               "item_3": {
+               "multitool": {
                 "name": "Multi-tool",
                 "type": "tool",
                 "still_have": true,
                 "quantity": 1
                },
-               "item_4": {
+               "scanner": {
                 "name": "Basic Hazard Scanner",
                 "type": "portable_computer",
                 "still_have": true,
@@ -144,16 +141,15 @@
                }
             }
         },
-        "item_5": {
+        "ownkeycard": {
             "name": "Level 4 Keycard",
-            "owner": "Agent Rook",
             "type": "keycard",
             "access_level": 4,
             "still_have": true,
             "still_activated": true,
             "quantity": 1
         },
-        "item_6": {
+        "plainoutfit": {
             "name": "Plainclothes attire",
             "type": "outfit",
             "still_have": true,
@@ -167,6 +163,8 @@
         "finch_compromised": false,
         "finch_trust_level": 85,
         "memetic_exposure": 0,
-        "knows_petrova": true
+        "knows_petrova": false,
+        "knows_gate_locus": false,
+        "knows_julian_thorne_implication": false
     }
 }
