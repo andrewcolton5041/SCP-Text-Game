@@ -115,7 +115,7 @@ class MainMenu:
         return True
 
 
-def display_main_menu() -> None:
+def display_main_menu() -> GameStateEnum:
     """
     Display and handle the main menu until user quits.
     Entry point for the main menu system.

@@ -20,7 +20,7 @@ class GameSession:
     
     def __init__(self) -> None:
         """Initialize a new game session with default states."""
-        self.game_state = None  # Will be set to GameStateModel instance during start_new_game
+        self.game_state: GameStateModel | None = None  # Will be set to GameStateModel instance during start_new_game
         self.current_state = GameStateEnum.INITIALIZING
         self.interaction_state = InteractionState.EXPLORATION
         logger.info("Game session initialized with state %s", self.current_state)
@@ -151,7 +151,7 @@ class GameSession:
 _game_session = None
 
 
-def start_new_game() -> None:
+def start_new_game() -> GameStateEnum:
     """Initiates the sequence for starting a new game."""
     global _game_session
     logger.info("New game selected. Starting sequence.")
