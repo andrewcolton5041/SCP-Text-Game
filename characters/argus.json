@@ -1,0 +1,76 @@
+{
+    "name": "ARGUS",
+    "alias": true,
+    "age": "approx. 40s",
+    "nationality": "Unknown",
+    "clearance_level": null,
+    "characteristics": {
+        "strength": 55,
+        "constitution": 60,
+        "size": 60,
+        "intelligence": 75,
+        "power": 65,
+        "dexterity": 60,
+        "appearance": 50,
+        "education": 70
+    },
+    "derived_stats": {
+        "hp": 12,
+        "max_hp": 12,
+        "ms": 65,
+        "max_ms": 65,
+        "mp": 13,
+        "max_mp": 13,
+        "db": 0,
+        "build": 0,
+        "move": 8
+    },
+    "skills": {
+        "investigative": {
+            "spot_hidden": 65,
+            "library_use": 70
+        },
+        "combat_survival": {
+            "stealth": 60,
+            "handgun": 50,
+            "brawl": 55,
+            "dodge": 50
+        },
+        "technical_knowledge": {
+            "computer_use": 60,
+            "knowledge_gois": 55
+        },
+        "social": {
+            "persuade": 55
+        },
+        "other": {
+            "english": 70,
+            "spanish": 50
+        }
+    },
+    "combat_rolls": {
+        "brawl": {
+            "damage": "1D3",
+            "att_per_round": 1
+        },
+        "handgun": {
+            "damage": "1D10",
+            "range": 20,
+            "att_per_round": 1
+        }
+    },
+    "background": {
+        "specialization": "Independent Anomalous Investigator / Info-broker specializing in GoIs. Possibly former Foundation, Chaos Insurgency defector, or independent.",
+        "reason_joining_found": "N/A (Independent)",
+        "ideology": "Pragmatic, cautious, cynical but possesses a hidden ethical core. Seeks to expose/stop GoI-███, possibly for ideological reasons or profit. Uses dry humor. Resourceful.",
+        "contact": "Claims vital information regarding Dr. Aris Thorne's death and the OGE.",
+        "incidents": "Was tracking Aris Thorne's research independently before Thorne's death.",
+        "possession": "Often seen fiddling with a datachip or encrypted communicator.",
+        "description": "Unremarkable appearance, blends easily. Favors practical, durable clothing. Observant eyes, carries himself with a quiet confidence that suggests field experience."
+    },
+    "inventory": {},
+    "status_flags": {
+        "met_argus": false,
+        "argus_trust_level": 50
+    }
+}

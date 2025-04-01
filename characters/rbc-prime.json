@@ -1,0 +1,117 @@
+{
+  "name": "Subject: RBC-Prime",
+  "alias": "The Gaunt Man",
+  "age": "Unknown (Appears 30s-40s)",
+  "nationality": "Unknown (Potentially original OGE team member or earlier)",
+  "clearance_level": null,
+  "role": "Advanced Residual Bioconstruct / Enforcer",
+  "characteristics": {
+    "strength": 75,
+    "constitution": 80,
+    "size": 65,
+    "intelligence": 60,
+    "power": 70,
+    "dexterity": 70,
+    "appearance": 25
+  },
+  "derived_stats": {
+    "hp": 15,
+    "max_hp": 15,
+    "ms": null,
+    "max_ms": null,
+    "mp": 14,
+    "max_mp": 14,
+    "db": "+1D4",
+    "build": 1,
+    "move": 9
+  },
+  "skills": {
+    "investigative": {
+      "spot_hidden": 75
+    },
+    "combat_survival": {
+      "stealth": 70,
+      "brawl": 80,
+      "dodge": 65
+    },
+    "technical_knowledge": {},
+    "social": {
+      "intimidate": 75
+    },
+    "other": {}
+  },
+  "combat_rolls": {
+    "brawl": {
+      "damage": "1D3+1D4",
+      "att_per_round": 1
+    }
+  },
+  "background": {
+    "specialization": "Advanced/stabilized Residual Bioconstruct. Enforcer/Bodyguard for Silas Vance.",
+    "reason_joining_found": "N/A (Hostile Entity).",
+    "ideology": "Fundamentally inhuman. Driven by Locus's biological imperative and commands from Vance/Whisperer. Retains intelligence and cunning. Utterly ruthless, patient, silent. Immune to pain/conventional social interaction.",
+    "contact": "Silas Vance / The Whisperer.",
+    "incidents": "Potentially original OGE team member or someone exposed much earlier to Gate Locus influence.",
+    "possession": "Collects small, metallic objects from victims. Wears durable, somewhat archaic-looking clothing, wide-brimmed hat.",
+    "description": "Tall, unnervingly thin, gaunt features, pronounced cheekbones, deep-set pale eyes that rarely blink. Moves with unnatural stillness or bursts of predatory speed. Silent and watchful. Exudes palpable menace."
+  },
+  "inventory": {
+    "archaic_clothing": {
+      "name": "Durable Archaic Clothing",
+      "type": "clothing",
+      "wearing": true,
+      "still_have": true,
+      "quantity": 1
+    },
+    "wide_brimmed_hat": {
+      "name": "Wide-brimmed Hat",
+      "type": "clothing",
+      "wearing": true,
+      "still_have": true,
+      "quantity": 1
+    },
+    "collected_trinkets": {
+      "name": "Pouch of Metallic Trinkets",
+      "type": "misc",
+      "quantity": "Varies",
+      "still_have": true
+    }
+  },
+  "status_flags": {
+    "met_rbc_prime": false,
+    "rbc_prime_hostile": true
+  },
+  "special_abilities": {
+    "damage_resistance": {
+      "value": 3,
+      "notes": "Ignores first 3 points of damage per attack unless CNS hit or incendiary."
+    },
+    "infectious_regurgitation": {
+      "name": "Infectious Regurgitation",
+      "range": "Close (Touch/Spray)",
+      "attack_type": "Special",
+      "resistance": "CON Check",
+      "effect": "On failed CON check, initiate bioconstruction transformation (details TBD).",
+      "cost_mp": 5
+    },
+    "unnatural_movement": {
+      "name": "Unnatural Movement",
+      "effect": "May gain bonus die on Stealth or Dodge in specific environments, or move faster than expected.",
+      "notes": "Narrative/mechanical effect TBD.",
+      "type": "Passive"
+    },
+    "fear_aura": {
+      "name": "Fear Aura",
+      "range": "Close Proximity",
+      "effect": "Mental Stability check (0/1D2) upon first close encounter.",
+      "type": "Passive"
+    },
+    "regeneration": {
+      "name": "Regeneration",
+      "rate": 2,
+      "unit": "HP per round",
+      "notes": "Recovers 2 HP per combat round unless 'killed' by specific means (e.g., dismemberment, incineration, Locus disruption).",
+      "type": "Passive"
+    }
+  }
+}

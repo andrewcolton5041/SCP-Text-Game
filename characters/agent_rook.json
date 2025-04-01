@@ -69,6 +69,7 @@
             "damage": "1D10",
             "range": 20,
             "att_per_round": 2
+        }
     },
     "background": {
         "specialization": "Field Investigation & Anomalous Incident Response (AIR). Experience with initial assessment and containment of newly discovered anomalies.",
@@ -165,6 +166,9 @@
         "memetic_exposure": 0,
         "knows_petrova": false,
         "knows_gate_locus": false,
-        "knows_julian_thorne_implication": false
+        "knows_julian_thorne_implication": false,
+        "seen_goi_symbol": false,
+        "understands_goi_structure_hypothesis": false,
+        "thorne_suspected_finch": false
     }
 }

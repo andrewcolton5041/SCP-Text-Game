@@ -1,0 +1,122 @@
+{
+  "name": "Silas Vance",
+  "age": 35,
+  "nationality": "Unknown",
+  "clearance_level": null,
+  "role": "Afflicted Dilettante / GoI-███ Cell Lead",
+  "characteristics": {
+    "strength": 50,
+    "constitution": 40,
+    "size": 60,
+    "intelligence": 70,
+    "power": 50,
+    "dexterity": 55,
+    "appearance": 65,
+    "education": 65
+  },
+  "derived_stats": {
+    "hp": 10,
+    "max_hp": 10,
+    "ms": 50,
+    "max_ms": 50,
+    "mp": 10,
+    "max_mp": 10,
+    "db": 0,
+    "build": 0,
+    "move": 8
+  },
+  "skills": {
+    "investigative": {
+      "listen": 55,
+      "spot_hidden": 40,
+      "psychology": 40
+    },
+    "combat_survival": {
+      "brawl": 25,
+      "dodge": 22,
+      "stealth": 50
+    },
+    "technical_knowledge": {
+      "knowledge_goi_xxx": 40,
+      "knowledge_occult": 25
+    },
+    "social": {
+      "charm": 70,
+      "fast_talk": 65,
+      "persuade": 60,
+      "credit_rating": 60
+    },
+    "other": {
+      "language_english": 65
+    }
+  },
+  "combat_rolls": {
+    "brawl": {
+      "damage": "1D3",
+      "att_per_round": 1
+    }
+  },
+  "background": {
+    "specialization": "GoI-███ Cell Lead, directing regional activity (RBC control, Locus interface).",
+    "reason_joining_found": "N/A (Antagonist).",
+    "ideology": "Compromised/infected by SCP-XXXX ('The Whisperer in Flesh'). Body degrading, entity controls him. Seeks 'Reshaping'.",
+    "contact": "Directs Subject: RBC-Prime. Connection to OGE unknown.",
+    "incidents": "Compromised during prior visit to an anomalous site.",
+    "possession": "Expensive but ill-fitting clothes, potent painkillers or anomalous substances.",
+    "description": "Outwardly charming but physically unwell (pale, sweating, dark circles, faint odor). Veins discolored on close inspection. Expensive cologne."
+  },
+  "inventory": {
+    "painkillers": {
+      "name": "Potent Painkillers",
+      "type": "drug",
+      "quantity": "Varies",
+      "still_have": true
+    },
+    "expensive_clothes": {
+      "name": "Expensive Clothes",
+      "type": "clothing",
+      "wearing": true,
+      "still_have": true,
+      "quantity": 1
+    }
+  },
+  "status_flags": {
+    "met_vance": false,
+    "vance_state": "Silas Dominant",
+    "vance_true_nature_known": false
+  },
+  "whisperer_state_mods": {
+    "description_note": "Voice deepens, eyes may flash unnaturally. Cold, arrogant, commanding.",
+    "characteristics_override": {
+      "constitution": 80,
+      "power": 85
+    },
+    "derived_stats_override": {
+      "hp": 14,
+      "max_hp": 14,
+      "ms": 85,
+      "max_ms": 85,
+      "mp": 17,
+      "max_mp": 17
+    },
+    "skills_override": {
+      "intimidate": 75
+    },
+    "special_abilities": [
+      {
+        "name": "Implant Fear",
+        "type": "mental",
+        "resistance": "POW Check",
+        "effect": "Induce fear/panic",
+        "cost_mp": 2
+      },
+      {
+        "name": "Mental Suggestion",
+        "type": "mental",
+        "resistance": "POW Check",
+        "effect": "Subtle influence on thoughts/actions",
+        "cost_mp": 3
+      }
+    ]
+  }
+}

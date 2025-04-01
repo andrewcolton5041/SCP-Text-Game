@@ -1,0 +1,85 @@
+{
+  "name": "Elena Rojas",
+  "age": 68,
+  "nationality": "Peruvian",
+  "clearance_level": 0,
+  "role": "Proprietor, 'El Cóndor Solitario' Supply Post",
+  "characteristics": {
+    "strength": 30,
+    "constitution": 55,
+    "size": 45,
+    "intelligence": 65,
+    "power": 70,
+    "dexterity": 35,
+    "appearance": 45,
+    "education": 50
+  },
+  "derived_stats": {
+    "hp": 10,
+    "max_hp": 10,
+    "ms": 70,
+    "max_ms": 70,
+    "mp": 14,
+    "max_mp": 14,
+    "db": -1,
+    "build": -1,
+    "move": 3
+  },
+  "skills": {
+    "investigative": {
+      "listen": 55,
+      "spot_hidden": 50,
+      "psychology": 40
+    },
+    "combat_survival": {
+      "brawl": 25,
+      "dodge": 17,
+      "melee_weapon_blunt": 55,
+      "throw": 30
+    },
+    "technical_knowledge": {
+      "knowledge_local_area": 60
+    },
+    "social": {
+      "intimidate": 55,
+      "credit_rating": 50,
+      "persuade": 30
+    },
+    "other": {
+      "language_spanish": 65
+    }
+  },
+  "combat_rolls": {
+    "brawl": {
+      "damage": "1D3-1",
+      "att_per_round": 1
+    },
+    "melee_weapon_blunt": {
+      "damage": "1D6-1",
+      "att_per_round": 1
+    }
+  },
+  "background": {
+    "specialization": "Proprietor of 'El Cóndor Solitario' Supply Post.",
+    "reason_joining_found": "N/A (Civilian).",
+    "ideology": "Gruff, pragmatic, suspicious of outsiders but fair. Primarily motivated by running her business. Dislikes trouble. Protective of her property.",
+    "contact": "Locals, miners, occasionally Foundation personnel.",
+    "incidents": "Has seen strange things near AZ-SA09 over the years but keeps quiet.",
+    "possession": "Supply post inventory, sturdy walking stick.",
+    "description": "Stern, weathered face. Walks with a slight limp. Dresses in practical, warm clothing. Sharp, observant eyes. Hard of hearing in one ear, speaks loudly."
+  },
+  "inventory": {
+    "walking_stick": {
+      "name": "Sturdy Walking Stick",
+      "type": "weapon_melee",
+      "damage_dice": "1D6",
+      "still_have": true,
+      "quantity": 1
+    }
+  },
+  "status_flags": {
+    "met_rojas": false,
+    "rojas_trust_level": 40,
+    "shared_rumors": false
+  }
+}
